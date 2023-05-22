@@ -1,16 +1,29 @@
-import assertString from './util/assertString';
-var defaultOptions = {
-  loose: false
-};
-var strictBooleans = ['true', 'false', '1', '0'];
-var looseBooleans = [].concat(strictBooleans, ['yes', 'no']);
-export default function isBoolean(str) {
-  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultOptions;
-  assertString(str);
+var baseGetTag = require('./_baseGetTag'),
+    isObjectLike = require('./isObjectLike');
 
-  if (options.loose) {
-    return looseBooleans.includes(str.toLowerCase());
-  }
+/** `Object#toString` result references. */
+var boolTag = '[object Boolean]';
 
-  return strictBooleans.includes(str);
+/**
+ * Checks if `value` is classified as a boolean primitive or object.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a boolean, else `false`.
+ * @example
+ *
+ * _.isBoolean(false);
+ * // => true
+ *
+ * _.isBoolean(null);
+ * // => false
+ */
+function isBoolean(value) {
+  return value === true || value === false ||
+    (isObjectLike(value) && baseGetTag(value) == boolTag);
 }
+
+module.exports = isBoolean;
