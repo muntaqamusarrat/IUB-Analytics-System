@@ -1,17 +1,16 @@
 var baseToString = require('./_baseToString'),
-    baseTrim = require('./_baseTrim'),
     castSlice = require('./_castSlice'),
     charsEndIndex = require('./_charsEndIndex'),
-    charsStartIndex = require('./_charsStartIndex'),
     stringToArray = require('./_stringToArray'),
-    toString = require('./toString');
+    toString = require('./toString'),
+    trimmedEndIndex = require('./_trimmedEndIndex');
 
 /**
- * Removes leading and trailing whitespace or specified characters from `string`.
+ * Removes trailing whitespace or specified characters from `string`.
  *
  * @static
  * @memberOf _
- * @since 3.0.0
+ * @since 4.0.0
  * @category String
  * @param {string} [string=''] The string to trim.
  * @param {string} [chars=whitespace] The characters to trim.
@@ -19,29 +18,24 @@ var baseToString = require('./_baseToString'),
  * @returns {string} Returns the trimmed string.
  * @example
  *
- * _.trim('  abc  ');
- * // => 'abc'
+ * _.trimEnd('  abc  ');
+ * // => '  abc'
  *
- * _.trim('-_-abc-_-', '_-');
- * // => 'abc'
- *
- * _.map(['  foo  ', '  bar  '], _.trim);
- * // => ['foo', 'bar']
+ * _.trimEnd('-_-abc-_-', '_-');
+ * // => '-_-abc'
  */
-function trim(string, chars, guard) {
+function trimEnd(string, chars, guard) {
   string = toString(string);
   if (string && (guard || chars === undefined)) {
-    return baseTrim(string);
+    return string.slice(0, trimmedEndIndex(string) + 1);
   }
   if (!string || !(chars = baseToString(chars))) {
     return string;
   }
   var strSymbols = stringToArray(string),
-      chrSymbols = stringToArray(chars),
-      start = charsStartIndex(strSymbols, chrSymbols),
-      end = charsEndIndex(strSymbols, chrSymbols) + 1;
+      end = charsEndIndex(strSymbols, stringToArray(chars)) + 1;
 
-  return castSlice(strSymbols, start, end).join('');
+  return castSlice(strSymbols, 0, end).join('');
 }
 
-module.exports = trim;
+module.exports = trimEnd;
